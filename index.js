@@ -1,5 +1,5 @@
 const BASE = "https://fsa-crud-2aa9294fe819.herokuapp.com/api/";
-const COHORT = "2505-FTB-CT-WEB-PT"; 
+const COHORT = "2505-FTB-CT-WEB-PT";
 const API = BASE + COHORT;
 
 let parties = [];
@@ -96,8 +96,10 @@ function SelectedParty() {
   $party.querySelector("GuestList").replaceWith(GuestList());
 
   const $deleteButton = $party.querySelector("#deleteButton");
-  $deleteButton.addEventListener("click", ()=>{
-    if(confirm("Confirm Delete?")){deleteEvent(selectedParty.id)}
+  $deleteButton.addEventListener("click", () => {
+    if (confirm("Confirm Delete?")) {
+      deleteEvent(selectedParty.id);
+    }
   });
 
   return $party;
@@ -111,7 +113,7 @@ function GuestList() {
     )
   );
 
-    const $guests = guestsAtParty.map((guest) => {
+  const $guests = guestsAtParty.map((guest) => {
     const $guest = document.createElement("li");
     $guest.textContent = guest.name;
     return $guest;
@@ -120,7 +122,6 @@ function GuestList() {
 
   return $ul;
 }
-
 
 const form = () => {
   const $form = document.createElement("form");
@@ -147,21 +148,20 @@ const form = () => {
   </div>
   <button type="submit" class="btn btn-primary">Create Event</button>
 </form>
-  `
+  `;
 
   $form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const dateInput = document.querySelector("#newEventDate").value
-    
-    if(dateInput){
+    const dateInput = document.querySelector("#newEventDate").value;
+
+    if (dateInput) {
       const isoDate = new Date(dateInput).toISOString();
-      console.log("ISO Date:",isoDate);
+      console.log("ISO Date:", isoDate);
     }
-  })
+  });
 
-
-  return $form
-}
+  return $form;
+};
 
 const addNewEvent = async (e) => {
   e.preventDefault();
@@ -178,21 +178,17 @@ const addNewEvent = async (e) => {
     description: e.target[1].value,
     date: new Date(e.target[2].value).toISOString(),
     location: e.target[3].value,
-
   };
 
   console.log(obj);
   try {
-    const response = await fetch(
-      (API + "/events"),
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(obj),
-      }
-    );
+    const response = await fetch(API + "/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
 
     console.log(response);
     const data = await response.json();
@@ -202,22 +198,21 @@ const addNewEvent = async (e) => {
   }
 };
 
-
-const deleteEvent = async(id) => {
+const deleteEvent = async (id) => {
   const response = await fetch(`${API}/events/${id}`, {
-    method: "DELETE", 
-    headers:{
+    method: "DELETE",
+    headers: {
       "content-type": "application/json",
-  accept: "application/json"
-  }
-  }).then(resp=>resp.json())
-  .then(()=>{
-    $party.innerHTML = "";
-    const home = $party.querySelector(`[data-id='${id}']`);
-  party.remove();
+      accept: "application/json",
+    },
   })
-
-}
+    .then((resp) => resp.json())
+    .then(() => {
+      $party.innerHTML = "";
+      const home = $party.querySelector(`[data-id='${id}']`);
+      party.remove();
+    });
+};
 
 function render() {
   const $app = document.querySelector("#app");
@@ -249,4 +244,3 @@ async function init() {
 }
 
 init();
-
